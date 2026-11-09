@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project DRIP - Pass It On Campus Event</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dripYellow: '#FFE800',
+                        dripYellowHover: '#E6D000',
+                        dripBlack: '#0D0E10',
+                        dripDark: '#16181D',
+                        dripCard: '#1E2128',
+                        dripBorder: '#2E333D'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Teko', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glow-yellow {
+            box-shadow: 0 0 20px rgba(255, 232, 0, 0.25);
+        }
+        .glow-yellow-sm {
+            box-shadow: 0 0 10px rgba(255, 232, 0, 0.15);
+        }
+        .text-stroke {
+            -webkit-text-stroke: 1px #FFE800;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #16181D;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2E333D;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFE800;
+        }
+    </style>
+</head>
+<body class="bg-dripBlack text-white min-h-screen font-sans flex flex-col justify-between selection:bg-dripYellow selection:text-dripBlack antialiased">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-dripDark/95 backdrop-blur border-b border-dripBorder">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-dripYellow text-dripBlack font-display text-2xl font-bold tracking-wider px-3 py-0.5 rounded shadow">
+                    DRIP
+                </div>
+                <div class="hidden sm:block text-xs font-semibold uppercase tracking-widest text-gray-400">
+                    Pass 'N Play | Fontys Campus
+                </div>
+            </div>
+
+            <!-- View Switcher Tabs -->
+            <nav class="flex bg-dripBlack p-1 rounded-lg border border-dripBorder">
+                <button id="nav-challenge-btn" onclick="switchTab('challenge')" class="px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 bg-dripYellow text-dripBlack shadow">
+                    ⚽ Enter Score
+                </button>
+                <button id="nav-leaderboard-btn" onclick="switchTab('leaderboard')" class="px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white">
+                    🏆 Leaderboard
+                </button>
+                <button id="nav-info-btn" onclick="switchTab('info')" class="px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white">
+                    ℹ️ Mission & Drop-Off
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-5xl mx-auto px-4 py-6 w-full flex-grow">
+
+        <!-- TAB 1: CHALLENGE & PLEDGE SUBMISSION -->
+        <section id="tab-challenge" class="space-y-6">
+
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-dripCard via-dripDark to-dripCard rounded-2xl p-6 border border-dripBorder relative overflow-hidden">
+                <div class="absolute -right-8 -bottom-8 opacity-10 pointer-events-none">
+                    <svg width="240" height="240" viewBox="0 0 24 24" fill="currentColor" class="text-dripYellow">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                </div>
+                
+                <div class="max-w-2xl">
+                    <span class="inline-block bg-dripYellow/10 text-dripYellow border border-dripYellow/30 text-xs px-2.5 py-1 rounded-full uppercase tracking-wider font-bold mb-3">
+                        Good Vibes Week Event Activation
+                    </span>
+                    <h1 class="text-3xl sm:text-5xl font-display font-extrabold uppercase tracking-tight text-white leading-none mb-2">
+                        YOUR OLD KIT, <span class="text-dripYellow">THEIR NEXT GAME!</span>
+                    </h1>
+                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                        Take 3 shots at our target net, read why DRIP matters, and lock in your score to join the live campus high score board.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- Left Column: Form Section -->
+                <div class="lg:col-span-7 bg-dripCard border border-dripBorder rounded-2xl p-6 shadow-xl">
+                    <div class="flex items-center justify-between mb-5 pb-3 border-b border-dripBorder">
+                        <div>
+                            <h2 class="text-xl font-bold font-display uppercase tracking-wide text-dripYellow">Submit Score & Make Pledge</h2>
+                            <p class="text-xs text-gray-400">Lock in your target points to join the live ranking.</p>
+                        </div>
+                        <span class="bg-dripDark px-2.5 py-1 rounded-md text-xs text-gray-400 font-mono">Max: 300 Pts</span>
+                    </div>
+
+                    <form id="score-form" onsubmit="handleFormSubmit(event)" class="space-y-5">
+                        
+                        <!-- Participant Name -->
+                        <div>
+                            <label for="student-name" class="block text-xs uppercase font-bold text-gray-300 tracking-wider mb-2">
+                                Participant Name / Handle <span class="text-dripYellow">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="student-name" 
+                                required 
+                                placeholder="e.g. Alex M. or @alex_fontys" 
+                                class="w-full bg-dripDark border border-dripBorder rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-dripYellow transition"
+                            />
+                        </div>
+
+                        <!-- Score Input Selection -->
+                        <div>
+                            <label for="score-slider" class="block text-xs uppercase font-bold text-gray-300 tracking-wider mb-2">
+                                Points Scored <span class="text-dripYellow">*</span>
+                            </label>
+                            
+                            <div class="bg-dripDark border border-dripBorder rounded-xl p-4 text-center space-y-3">
+                                <div class="flex justify-between items-center px-1">
+                                    <span class="text-xs font-mono text-gray-400">0 PTS</span>
+                                    <div class="text-4xl font-display font-bold text-dripYellow tracking-wider">
+                                        <span id="score-display">150</span> <span class="text-xl text-gray-400 font-sans">PTS</span>
+                                    </div>
+                                    <span class="text-xs font-mono text-gray-400">300 PTS</span>
+                                </div>
+
+                                <input 
+                                    type="range" 
+                                    id="score-slider" 
+                                    min="0" 
+                                    max="300" 
+                                    step="10" 
+                                    value="150" 
+                                    oninput="updateScoreDisplay(this.value)"
+                                    class="w-full h-3 bg-dripCard rounded-lg appearance-none cursor-pointer accent-dripYellow focus:outline-none"
+                                />
+
+                                <div class="flex justify-between text-[10px] text-gray-500 font-mono px-1">
+                                    <span>0</span>
+                                    <span>50</span>
+                                    <span>100</span>
+                                    <span>150</span>
+                                    <span>200</span>
+                                    <span>250</span>
+                                    <span>300</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Read Mission & How to Donate (Mandatory Step) -->
+                        <div class="bg-dripDark/80 border border-dripYellow/30 rounded-xl p-4 space-y-3">
+                            <div class="flex items-center space-x-2 text-dripYellow font-bold text-xs uppercase tracking-wider">
+                                <span>📖 READ BEFORE PLEDGING: ABOUT PROJECT DRIP</span>
+                            </div>
+                            
+                            <div class="text-xs text-gray-300 space-y-2 leading-relaxed max-h-40 overflow-y-auto pr-1">
+                                <p>
+                                    <strong class="text-white">Our Core Mission:</strong> DRIP enables children (ages 4–16) to access sportswear regardless of financial barriers. We believe every kid deserves dignity, freedom of choice, and the confidence of feeling looking DRIP!
+                                </p>
+                                <p>
+                                    <strong class="text-white">Why It Matters:</strong> The average wardrobe holds over 170 items, and nearly a third go unworn. Your unused sportswear sitting in your closet can give local kids their next game.
+                                </p>
+                                <p>
+                                    <strong class="text-white">Where & How to Donate:</strong> Drop off your pre-loved, good quality sportswear (shirts, shorts, sneakers, club kits) at any local <strong class="text-dripYellow">Jumbo store</strong> collection box or directly at your local <strong class="text-dripYellow">sports club</strong>!
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Mandatory Wardrobe Pledge Checkbox -->
+                        <div class="bg-dripDark border border-dripBorder rounded-xl p-4 flex items-start space-x-3">
+                            <input 
+                                type="checkbox" 
+                                id="pledge-checkbox" 
+                                required 
+                                class="mt-0.5 h-5 w-5 rounded border-dripBorder text-dripYellow focus:ring-dripYellow accent-dripYellow cursor-pointer"
+                            />
+                            <label for="pledge-checkbox" class="text-xs text-gray-200 cursor-pointer select-none leading-snug">
+                                <span class="font-bold text-dripYellow block mb-0.5">I PLEDGE TO PASS IT ON! ✋</span>
+                                I confirm I have read DRIP’s mission and pledge to check my wardrobe for unused sportswear to hand in at Jumbo or my local sports club.
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button 
+                            type="submit" 
+                            class="w-full bg-dripYellow hover:bg-dripYellowHover text-dripBlack font-bold py-3.5 px-6 rounded-xl text-sm uppercase tracking-wider shadow-lg transition-all transform active:scale-95 flex items-center justify-center space-x-2"
+                        >
+                            <span>Lock In Score & Make Pledge</span>
+                            <span class="text-lg">⚡</span>
+                        </button>
+                    </form>
+                </div>
+                <div class="flex justify-between text-xs border-b border-dripBorder pb-2">
+                    <span class="text-gray-400">Recorded Score:</span>
+                    <span id="modal-score" class="font-bold text-dripYellow font-mono text-sm"></span>
+                </div>
+                <div class="pt-1">
+                    <span class="text-gray-400 text-xs block font-bold mb-0.5">Next Step:</span>
+                    <span class="text-xs text-gray-200 block">Check your closet & drop off pre-loved kit at Jumbo or your sports club!</span>
+                </div>
+            </div>
+
+            <button onclick="closeModal()" class="w-full bg-dripYellow hover:bg-dripYellowHover text-dripBlack font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition">
+                View Leaderboard Rank 🏆
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dripDark border-t border-dripBorder py-4 mt-8">
+        <div class="max-w-5xl mx-auto px-4 text-center text-xs text-gray-500">
+            Project DRIP © 2026 — PASS IT ON! Campus Brand Activation Platform.
+        </div>
+    </footer>
+
+    <!-- Application JavaScript Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration fallback for standalone/Vercel environments
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : {
+                apiKey: "AIzaSyDemoKeyForPublicCampusAppDRIP",
+                authDomain: "drip-campus-event.firebaseapp.com",
+                projectId: "drip-campus-event",
+                storageBucket: "drip-campus-event.appspot.com",
+                messagingSenderId: "1234567890",
+                appId: "1:1234567890:web:dripcampusevent123"
+            };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'project-drip-event';
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let unsubscribeLeaderboard = null;
+
+        // Firebase Auth Initialization
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.warn("Auth initialization fallback to anonymous mode:", err);
+                try {
+                    await signInAnonymously(auth);
+                } catch (e) {
+                    console.error("Anonymous auth failed:", e);
+                }
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                listenToLeaderboard();
+            }
+        });
+
+        // Real-time Firestore Listener for Campus Leaderboard
+        function listenToLeaderboard() {
+            if (unsubscribeLeaderboard) unsubscribeLeaderboard();
+
+            // Strict collection path adhering to public data rules
+            const entriesCollection = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+
+            unsubscribeLeaderboard = onSnapshot(entriesCollection, (snapshot) => {
+                const entries = [];
+                snapshot.forEach((docSnap) => {
+                    entries.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                renderLeaderboardUI(entries);
+            }, (error) => {
+                console.error("Firestore listener error:", error);
+            });
+        }
+
+        // Global functions attached to window for HTML event handlers
+        window.updateScoreDisplay = function(val) {
+            const displayEl = document.getElementById('score-display');
+            if (displayEl) displayEl.textContent = val;
+        };
+
+        window.handleFormSubmit = async function(event) {
+            event.preventDefault();
+
+            const nameInput = document.getElementById('student-name').value.trim();
+            const scoreInput = parseInt(document.getElementById('score-slider').value);
+            const pledgeChecked = document.getElementById('pledge-checkbox').checked;
+
+            if (!nameInput || isNaN(scoreInput) || !pledgeChecked) {
+                return;
+            }
+
+            const docId = 'entry_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+            const newEntry = {
+                name: nameInput,
+                score: scoreInput,
+                pledge: pledgeChecked,
+                timestamp: Date.now(),
+                userId: currentUser ? currentUser.uid : 'anon'
+            };
+
+            // Write to cloud Firestore
+            if (currentUser) {
+                try {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', docId);
+                    await setDoc(docRef, newEntry);
+                } catch (err) {
+                    console.error("Error saving entry to Firestore:", err);
+                }
+            }
+
+            // Trigger Confetti effect
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 80,
+                    spread: 60,
+                    origin: { y: 0.6 },
+                    colors: ['#FFE800', '#FFFFFF', '#16181D']
+                });
+            }
+
+            // Show Success Modal
+            document.getElementById('modal-name').textContent = nameInput;
+            document.getElementById('modal-score').textContent = `${scoreInput} PTS`;
+
+            openModal();
+
+            // Reset Form
+            document.getElementById('score-form').reset();
+            window.updateScoreDisplay(150);
+        };
+
+        window.openModal = function() {
+            const modal = document.getElementById('success-modal');
+            const modalContent = document.getElementById('success-modal-content');
+            if (modal && modalContent) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('success-modal');
+            const modalContent = document.getElementById('success-modal-content');
+            if (modal && modalContent) {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                modalContent.classList.remove('scale-100');
+                modalContent.classList.add('scale-95');
+            }
+            window.switchTab('leaderboard');
+        };
+
+        window.switchTab = function(tabName) {
+            const tabs = ['challenge', 'leaderboard', 'info'];
+            tabs.forEach(tab => {
+                const tabEl = document.getElementById(`tab-${tab}`);
+                const btnEl = document.getElementById(`nav-${tab}-btn`);
+                
+                if (tabEl && btnEl) {
+                    if (tab === tabName) {
+                        tabEl.classList.remove('hidden');
+                        btnEl.className = 'px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 bg-dripYellow text-dripBlack shadow';
+                    } else {
+                        tabEl.classList.add('hidden');
+                        btnEl.className = 'px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white';
+                    }
+                }
+            });
+        };
+
+        function safeSetText(id, text) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        }
+
+        // Render Leaderboard & Stats from cloud snapshot
+        function renderLeaderboardUI(data) {
+            // Memory sort by top score descending
+            data.sort((a, b) => b.score - a.score || a.timestamp - b.timestamp);
+
+            const tbody = document.getElementById('leaderboard-body');
+            const emptyState = document.getElementById('empty-leaderboard');
+
+            // Update Header Stats
+            safeSetText('stat-total-players', data.length);
+            safeSetText('stat-total-pledges', data.filter(d => d.pledge).length);
+            safeSetText('stat-top-score', data.length > 0 ? `${data[0].score} PTS` : '0 PTS');
+
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                if (emptyState) emptyState.classList.remove('hidden');
+            } else {
+                if (emptyState) emptyState.classList.add('hidden');
+            }
+
+            data.forEach((entry, index) => {
+                const rank = index + 1;
+
+                let rankBadgeClass = 'bg-dripDark text-gray-400 border border-dripBorder';
+                let rankSymbol = `#${rank}`;
+                
+                if (rank === 1) {
+                    rankBadgeClass = 'bg-dripYellow text-dripBlack font-extrabold shadow-sm';
+                    rankSymbol = '🥇 1';
+                } else if (rank === 2) {
+                    rankBadgeClass = 'bg-gray-300 text-dripBlack font-bold';
+                    rankSymbol = '🥈 2';
+                } else if (rank === 3) {
+                    rankBadgeClass = 'bg-amber-600 text-white font-bold';
+                    rankSymbol = '🥉 3';
+                }
+
+                const row = document.createElement('tr');
+                row.className = rank === 1 ? 'bg-dripYellow/5 hover:bg-dripYellow/10 transition' : 'hover:bg-dripDark/50 transition';
+
+                row.innerHTML = `
+                    <td class="py-3.5 px-4 text-center">
+                        <span class="inline-block px-2.5 py-1 rounded-md text-xs ${rankBadgeClass}">
+                            ${rankSymbol}
+                        </span>
+                    </td>
+                    <td class="py-3.5 px-4 font-semibold text-white flex items-center space-x-2">
+                        <span>${escapeHtml(entry.name || 'Anonymous')}</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-center font-mono font-bold text-dripYellow text-base">
+                        ${entry.score}
+                    </td>
+                    <td class="py-3.5 px-4 text-center">
+                        <span class="inline-flex items-center text-xs text-green-400 bg-green-400/10 px-2.5 py-0.5 rounded-full border border-green-500/20">
+                            ✓ Pledged & Informed
+                        </span>
+                    </td>
+                `;
+
+                tbody.appendChild(row);
+            });
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>"']/g, function(m) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                }[m];
+            });
+        }
+
+        // On Load Initialization
+        window.onload = function() {
+            initAuth();
+        };
+    </script>
+</body>
+</html>
