@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project DRIP - Pass It On Campus Event</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dripYellow: '#FFE800',
+                        dripYellowHover: '#E6D000',
+                        dripBlack: '#0D0E10',
+                        dripDark: '#16181D',
+                        dripCard: '#1E2128',
+                        dripBorder: '#2E333D'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Teko', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glow-yellow {
+            box-shadow: 0 0 20px rgba(255, 232, 0, 0.25);
+        }
+        .glow-yellow-sm {
+            box-shadow: 0 0 10px rgba(255, 232, 0, 0.15);
+        }
+        .text-stroke {
+            -webkit-text-stroke: 1px #FFE800;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #16181D;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2E333D;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFE800;
+        }
+    </style>
+</head>
+<body class="bg-dripBlack text-white min-h-screen font-sans flex flex-col justify-between selection:bg-dripYellow selection:text-dripBlack antialiased">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-dripDark/95 backdrop-blur border-b border-dripBorder">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-dripYellow text-dripBlack font-display text-2xl font-bold tracking-wider px-3 py-0.5 rounded shadow">
+                    DRIP
+                </div>
+                <div class="hidden sm:block text-xs font-semibold uppercase tracking-widest text-gray-400">
+                    Pass 'N Play | Fontys Campus
+                </div>
+            </div>
+
+            <!-- View Switcher Tabs -->
+            <nav class="flex bg-dripBlack p-1 rounded-lg border border-dripBorder">
+                <button id="nav-challenge-btn" onclick="switchTab('challenge')" class="px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 bg-dripYellow text-dripBlack shadow">
+                    ⚽ Enter Score
+                </button>
+                <button id="nav-leaderboard-btn" onclick="switchTab('leaderboard')" class="px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white">
+                    🏆 Leaderboard
+                </button>
+                <button id="nav-info-btn" onclick="switchTab('info')" class="px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white">
+                    ℹ️ Mission & Drop-Off
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-5xl mx-auto px-4 py-6 w-full flex-grow">
+
+        <!-- TAB 1: CHALLENGE & PLEDGE SUBMISSION -->
+        <section id="tab-challenge" class="space-y-6">
+
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-dripCard via-dripDark to-dripCard rounded-2xl p-6 border border-dripBorder relative overflow-hidden">
+                <div class="absolute -right-8 -bottom-8 opacity-10 pointer-events-none">
+                    <svg width="240" height="240" viewBox="0 0 24 24" fill="currentColor" class="text-dripYellow">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                </div>
+                
+                <div class="max-w-2xl">
+                    <span class="inline-block bg-dripYellow/10 text-dripYellow border border-dripYellow/30 text-xs px-2.5 py-1 rounded-full uppercase tracking-wider font-bold mb-3">
+                        Good Vibes Week Event Activation
+                    </span>
+                    <h1 class="text-3xl sm:text-5xl font-display font-extrabold uppercase tracking-tight text-white leading-none mb-2">
+                        YOUR OLD KIT, <span class="text-dripYellow">THEIR NEXT GAME!</span>
+                    </h1>
+                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                        Take 3 shots at our target net, read why DRIP matters, and lock in your score to join the live campus high score board.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- Left Column: Form Section -->
+                <div class="lg:col-span-7 bg-dripCard border border-dripBorder rounded-2xl p-6 shadow-xl">
+                    <div class="flex items-center justify-between mb-5 pb-3 border-b border-dripBorder">
+                        <div>
+                            <h2 class="text-xl font-bold font-display uppercase tracking-wide text-dripYellow">Submit Score & Make Pledge</h2>
+                            <p class="text-xs text-gray-400">Lock in your target points to join the live ranking.</p>
+                        </div>
+                        <span class="bg-dripDark px-2.5 py-1 rounded-md text-xs text-gray-400 font-mono">Max: 300 Pts</span>
+                    </div>
+
+                    <form id="score-form" onsubmit="handleFormSubmit(event)" class="space-y-5">
+                        
+                        <!-- Participant Name -->
+                        <div>
+                            <label for="student-name" class="block text-xs uppercase font-bold text-gray-300 tracking-wider mb-2">
+                                Participant Name / Handle <span class="text-dripYellow">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="student-name" 
+                                required 
+                                placeholder="e.g. Alex M. or @alex_fontys" 
+                                class="w-full bg-dripDark border border-dripBorder rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-dripYellow transition"
+                            />
+                        </div>
+
+                        <!-- Score Input Selection -->
+                        <div>
+                            <label for="score-slider" class="block text-xs uppercase font-bold text-gray-300 tracking-wider mb-2">
+                                Points Scored <span class="text-dripYellow">*</span>
+                            </label>
+                            
+                            <div class="bg-dripDark border border-dripBorder rounded-xl p-4 text-center space-y-3">
+                                <div class="flex justify-between items-center px-1">
+                                    <span class="text-xs font-mono text-gray-400">0 PTS</span>
+                                    <div class="text-4xl font-display font-bold text-dripYellow tracking-wider">
+                                        <span id="score-display">150</span> <span class="text-xl text-gray-400 font-sans">PTS</span>
+                                    </div>
+                                    <span class="text-xs font-mono text-gray-400">300 PTS</span>
+                                </div>
+
+                                <input 
+                                    type="range" 
+                                    id="score-slider" 
+                                    min="0" 
+                                    max="300" 
+                                    step="10" 
+                                    value="150" 
+                                    oninput="updateScoreDisplay(this.value)"
+                                    class="w-full h-3 bg-dripCard rounded-lg appearance-none cursor-pointer accent-dripYellow focus:outline-none"
+                                />
+
+                                <div class="flex justify-between text-[10px] text-gray-500 font-mono px-1">
+                                    <span>0</span>
+                                    <span>50</span>
+                                    <span>100</span>
+                                    <span>150</span>
+                                    <span>200</span>
+                                    <span>250</span>
+                                    <span>300</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Read Mission & How to Donate (Mandatory Step) -->
+                        <div class="bg-dripDark/80 border border-dripYellow/30 rounded-xl p-4 space-y-3">
+                            <div class="flex items-center space-x-2 text-dripYellow font-bold text-xs uppercase tracking-wider">
+                                <span>📖 READ BEFORE PLEDGING: ABOUT PROJECT DRIP</span>
+                            </div>
+                            
+                            <div class="text-xs text-gray-300 space-y-2 leading-relaxed max-h-40 overflow-y-auto pr-1">
+                                <p>
+                                    <strong class="text-white">Our Core Mission:</strong> DRIP enables children (ages 4–16) to access sportswear regardless of financial barriers. We believe every kid deserves dignity, freedom of choice, and the confidence of feeling looking DRIP!
+                                </p>
+                                <p>
+                                    <strong class="text-white">Why It Matters:</strong> The average wardrobe holds over 170 items, and nearly a third go unworn. Your unused sportswear sitting in your closet can give local kids their next game.
+                                </p>
+                                <p>
+                                    <strong class="text-white">Where & How to Donate:</strong> Drop off your pre-loved, good quality sportswear (shirts, shorts, sneakers, club kits) at any local <strong class="text-dripYellow">Jumbo store</strong> collection box or directly at your local <strong class="text-dripYellow">sports club</strong>!
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Mandatory Wardrobe Pledge Checkbox -->
+                        <div class="bg-dripDark border border-dripBorder rounded-xl p-4 flex items-start space-x-3">
+                            <input 
+                                type="checkbox" 
+                                id="pledge-checkbox" 
+                                required 
+                                class="mt-0.5 h-5 w-5 rounded border-dripBorder text-dripYellow focus:ring-dripYellow accent-dripYellow cursor-pointer"
+                            />
+                            <label for="pledge-checkbox" class="text-xs text-gray-200 cursor-pointer select-none leading-snug">
+                                <span class="font-bold text-dripYellow block mb-0.5">I PLEDGE TO PASS IT ON! ✋</span>
+                                I confirm I have read DRIP’s mission and pledge to check my wardrobe for unused sportswear to hand in at Jumbo or my local sports club.
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button 
+                            type="submit" 
+                            class="w-full bg-dripYellow hover:bg-dripYellowHover text-dripBlack font-bold py-3.5 px-6 rounded-xl text-sm uppercase tracking-wider shadow-lg transition-all transform active:scale-95 flex items-center justify-center space-x-2"
+                        >
+                            <span>Lock In Score & Make Pledge</span>
+                            <span class="text-lg">⚡</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right Column: Live Mini-Leaderboard Preview & Stats -->
+                <div class="lg:col-span-5 space-y-6">
+                    <!-- Quick Impact Card -->
+                    <div class="bg-dripCard border border-dripBorder rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-display text-lg uppercase tracking-wide text-dripYellow">Live Campus Impact</h3>
+                            <span class="flex h-2 w-2 relative">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 text-center">
+                            <div class="bg-dripDark p-4 rounded-xl border border-dripBorder">
+                                <span id="stat-total-players" class="block text-3xl font-display font-bold text-white">0</span>
+                                <span class="text-[11px] uppercase tracking-wider text-gray-400">Wardrobe Pledges</span>
+                            </div>
+                            <div class="bg-dripDark p-4 rounded-xl border border-dripBorder">
+                                <span id="stat-top-score" class="block text-3xl font-display font-bold text-dripYellow">0</span>
+                                <span class="text-[11px] uppercase tracking-wider text-gray-400">High Score (Pts)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top 5 Preview -->
+                    <div class="bg-dripCard border border-dripBorder rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-display text-lg uppercase tracking-wide text-white">Top 5 High Scores</h3>
+                            <button onclick="switchTab('leaderboard')" class="text-xs text-dripYellow hover:underline font-semibold">View Full Board →</button>
+                        </div>
+                        <div id="mini-leaderboard-list" class="space-y-2.5">
+                            <p class="text-xs text-gray-500 text-center py-6">No scores recorded yet. Be the first on the board!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: FULL LIVE LEADERBOARD -->
+        <section id="tab-leaderboard" class="hidden space-y-6">
+            <div class="bg-dripCard border border-dripBorder rounded-2xl p-6 shadow-xl">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-dripBorder">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-dripYellow">Live Campus Ranking</span>
+                        <h2 class="text-3xl font-display font-bold uppercase text-white mt-0.5">PASS IT ON LEADERBOARD</h2>
+                        <p class="text-xs text-gray-400 mt-1">Sorted automatically from highest score to lowest score.</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-dripDark px-4 py-2 rounded-xl border border-dripBorder text-right">
+                            <span class="text-[10px] uppercase text-gray-400 block">Total Participants</span>
+                            <span id="full-stat-players" class="text-xl font-display font-bold text-dripYellow">0</span>
+                        </div>
+                        <button onclick="switchTab('challenge')" class="bg-dripYellow hover:bg-dripYellowHover text-dripBlack font-bold text-xs uppercase px-4 py-3 rounded-xl transition">
+                            + Add Score
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Leaderboard Table -->
+                <div class="mt-6 overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-dripBorder text-[11px] uppercase tracking-wider text-gray-400">
+                                <th class="py-3 px-4 w-20">Rank</th>
+                                <th class="py-3 px-4">Participant</th>
+                                <th class="py-3 px-4 text-center">Pledge Status</th>
+                                <th class="py-3 px-4 text-right">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body" class="divide-y divide-dripBorder/60 text-sm">
+                            <!-- Rows dynamically populated -->
+                        </tbody>
+                    </table>
+                    <div id="empty-leaderboard" class="text-center py-12 text-gray-500 text-sm">
+                        No entries yet! Step up to the goal, take 3 shots, and lock in your score.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: MISSION & DROP-OFF LOCATIONS -->
+        <section id="tab-info" class="hidden space-y-6">
+            <div class="bg-dripCard border border-dripBorder rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+                <div class="border-b border-dripBorder pb-5">
+                    <span class="inline-block bg-dripYellow/10 text-dripYellow border border-dripYellow/30 text-xs px-2.5 py-1 rounded-full uppercase tracking-wider font-bold mb-2">
+                        About Project DRIP
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-display font-bold uppercase text-white">
+                        EVERY CHILD DESERVES TO <span class="text-dripYellow">LOOK DRIP</span>
+                    </h2>
+                    <p class="text-gray-300 text-sm sm:text-base mt-2 leading-relaxed max-w-3xl">
+                        DRIP enables children (ages 4–16) to access high-quality sportswear regardless of financial barriers. Instead of traditional charity bins, we champion dignity, freedom of choice, and pride on the pitch.
+                    </p>
+                </div>
+
+                <!-- 3-Step Drop-Off Guide -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-dripDark border border-dripBorder rounded-xl p-5 space-y-2">
+                        <div class="w-8 h-8 rounded-lg bg-dripYellow text-dripBlack font-display font-bold text-xl flex items-center justify-center">1</div>
+                        <h3 class="font-bold text-white text-base">Check Your Wardrobe</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            The average Dutch wardrobe holds 50+ unworn items. Look for clean, good-condition jerseys, shorts, tracksuits, or sports sneakers you no longer wear.
+                        </p>
+                    </div>
+                    <div class="bg-dripDark border border-dripBorder rounded-xl p-5 space-y-2">
+                        <div class="w-8 h-8 rounded-lg bg-dripYellow text-dripBlack font-display font-bold text-xl flex items-center justify-center">2</div>
+                        <h3 class="font-bold text-white text-base">Find a Drop-Off Point</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            Hand in your pre-loved sportswear effortlessly at participating <strong class="text-dripYellow">Jumbo supermarkets</strong> across Eindhoven or directly at your <strong class="text-dripYellow">local sports club</strong>.
+                        </p>
+                    </div>
+                    <div class="bg-dripDark border border-dripBorder rounded-xl p-5 space-y-2">
+                        <div class="w-8 h-8 rounded-lg bg-dripYellow text-dripBlack font-display font-bold text-xl flex items-center justify-center">3</div>
+                        <h3 class="font-bold text-white text-base">Pass It On</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            The DRIP Sports Van brings curated gear directly to youth neighborhoods so kids aged 4–16 can pick out their own kit with confidence.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-dripDark/90 border border-dripYellow/30 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <h4 class="font-bold text-dripYellow text-sm uppercase tracking-wide">Ready to take the challenge?</h4>
+                        <p class="text-xs text-gray-300 mt-0.5">Score points at the Fontys stand and add your name to the live campus leaderboard.</p>
+                    </div>
+                    <button onclick="switchTab('challenge')" class="bg-dripYellow hover:bg-dripYellowHover text-dripBlack font-bold text-xs uppercase px-5 py-3 rounded-xl transition shrink-0">
+                        Go to Score Entry →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Success Confirmation Modal -->
+    <div id="success-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-dripCard border-2 border-dripYellow rounded-2xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl transform transition-all">
+            <div class="w-16 h-16 bg-dripYellow/20 text-dripYellow rounded-full flex items-center justify-center mx-auto text-3xl">
+                🏆
+            </div>
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-dripYellow">Pledge Locked In!</span>
+                <h3 id="modal-player-name" class="text-2xl font-display font-bold uppercase text-white mt-1">Awesome Shot!</h3>
+                <p class="text-sm text-gray-300 mt-1">
+                    You scored <strong id="modal-player-score" class="text-dripYellow">0 PTS</strong> and joined the PASS IT ON movement.
+                </p>
+            </div>
+            <div class="bg-dripDark border border-dripBorder rounded-xl p-3.5 text-left text-xs text-gray-300 space-y-1">
+                <p class="font-bold text-white">📍 Next Step — Drop Off Your Kit:</p>
+                <p>Bring your clean, unused sportswear to your nearest <strong class="text-dripYellow">Jumbo store</strong> or <strong class="text-dripYellow">local sports club</strong> collection point.</p>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button onclick="closeSuccessModal(true)" class="flex-1 bg-dripYellow hover:bg-dripYellowHover text-dripBlack font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition">
+                    View Leaderboard
+                </button>
+                <button onclick="closeSuccessModal(false)" class="px-4 py-3 bg-dripDark hover:bg-dripBorder text-gray-300 font-semibold rounded-xl text-xs uppercase transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-dripBorder bg-dripDark py-4 mt-10">
+        <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-2">
+            <div>Project DRIP • PASS IT ON Activation • Fontys Eindhoven</div>
+            <div id="sync-status" class="flex items-center space-x-1.5 text-gray-400">
+                <span class="w-2 h-2 rounded-full bg-yellow-400 inline-block"></span>
+                <span>Connecting live board...</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Application & Real-Time Leaderboard Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCcFseoFDtksCcCzilQ6aF2pnRa3muiVQA",
+            authDomain: "drip-fontys.firebaseapp.com",
+            projectId: "drip-fontys",
+            storageBucket: "drip-fontys.firebasestorage.app",
+            messagingSenderId: "846643279113",
+            appId: "1:846643279113:web:96c5c49256878d3182cfd8"
+        };
+
+        // Global State
+        let entries = [];
+        let db = null;
+        let auth = null;
+        let useCloud = false;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'drip-campus-event-2027';
+
+        // Initialize Cloud Sync
+        async function initApp() {
+            const statusEl = document.getElementById('sync-status');
+
+            try {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                useCloud = true;
+                if (statusEl) {
+                    statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span><span>Live Shared Cloud Leaderboard Active</span>`;
+                }
+
+                // Subscribe to real-time updates across ALL devices
+                const scoresRef = collection(db, 'artifacts', appId, 'public', 'data', 'drip_scores');
+                onSnapshot(scoresRef, (snapshot) => {
+                    const fetched = [];
+                    snapshot.forEach((doc) => {
+                        fetched.push({ id: doc.id, ...doc.data() });
+                    });
+                    entries = fetched;
+                    renderLeaderboard();
+                }, (err) => {
+                    console.error("Firestore snapshot error:", err);
+                    enableFallbackMode(statusEl);
+                });
+            } catch (e) {
+                console.warn("Cloud connection failed, using local fallback:", e);
+                enableFallbackMode(statusEl);
+            }
+        }
+
+        function enableFallbackMode(statusEl) {
+            useCloud = false;
+            if (statusEl) {
+                statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span><span>Offline / Local Mode (Check Firebase Auth/Rules)</span>`;
+            }
+            renderLeaderboard();
+        }
+
+        // Slider Value Update
+        window.updateScoreDisplay = function(val) {
+            const display = document.getElementById('score-display');
+            if (display) display.textContent = val;
+        };
+
+        // Tab Navigation Switcher
+        window.switchTab = function(tabName) {
+            const tabs = ['challenge', 'leaderboard', 'info'];
+            tabs.forEach((t) => {
+                const section = document.getElementById(`tab-${t}`);
+                const btn = document.getElementById(`nav-${t}-btn`);
+                if (section) {
+                    if (t === tabName) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                }
+                if (btn) {
+                    if (t === tabName) {
+                        btn.className = "px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 bg-dripYellow text-dripBlack shadow";
+                    } else {
+                        btn.className = "px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white";
+                    }
+                }
+            });
+
+            if (tabName === 'leaderboard') {
+                renderLeaderboard();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // Handle Form Submission
+        window.handleFormSubmit = async function(event) {
+            event.preventDefault();
+            const nameInput = document.getElementById('student-name');
+            const sliderInput = document.getElementById('score-slider');
+            const pledgeCheckbox = document.getElementById('pledge-checkbox');
+
+            const name = nameInput ? nameInput.value.trim() : '';
+            const score = sliderInput ? parseInt(sliderInput.value, 10) : 0;
+            const pledged = pledgeCheckbox ? pledgeCheckbox.checked : false;
+
+            if (!name || !pledged) return;
+
+            const newEntry = {
+                name: name,
+                score: score,
+                pledged: true,
+                createdAt: Date.now()
+            };
+
+            if (useCloud && db && auth?.currentUser) {
+                try {
+                    const scoresRef = collection(db, 'artifacts', appId, 'public', 'data', 'drip_scores');
+                    await addDoc(scoresRef, {
+                        ...newEntry,
+                        timestamp: serverTimestamp()
+                    });
+                } catch (err) {
+                    console.error("Failed saving to cloud, saving locally:", err);
+                    entries.push(newEntry);
+                    renderLeaderboard();
+                }
+            } else {
+                entries.push(newEntry);
+                renderLeaderboard();
+            }
+
+            // Show Success Modal & Confetti
+            const modalName = document.getElementById('modal-player-name');
+            const modalScore = document.getElementById('modal-player-score');
+            const modal = document.getElementById('success-modal');
+
+            if (modalName) modalName.textContent = `${name}!`;
+            if (modalScore) modalScore.textContent = `${score} PTS`;
+            if (modal) modal.classList.remove('hidden');
+
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 70,
+                    spread: 60,
+                    origin: { y: 0.6 },
+                    colors: ['#FFE800', '#FFFFFF', '#16181D']
+                });
+            }
+
+            // Reset Form
+            if (nameInput) nameInput.value = '';
+            if (sliderInput) {
+                sliderInput.value = 150;
+                window.updateScoreDisplay(150);
+            }
+            if (pledgeCheckbox) pledgeCheckbox.checked = false;
+        };
+
+        // Close Success Modal
+        window.closeSuccessModal = function(goToLeaderboard) {
+            const modal = document.getElementById('success-modal');
+            if (modal) modal.classList.add('hidden');
+            if (goToLeaderboard) {
+                window.switchTab('leaderboard');
+            }
+        };
+
+        // Escape HTML helper for safety
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Render & Sort Leaderboard by Highest Score
+        function renderLeaderboard() {
+            // Sort strictly descending by score, tie-break by earlier submission
+            const sorted = [...entries].sort((a, b) => {
+                if (b.score !== a.score) return b.score - a.score;
+                return (a.createdAt || 0) - (b.createdAt || 0);
+            });
+
+            // Update Stats
+            const totalPlayersEl = document.getElementById('stat-total-players');
+            const fullPlayersEl = document.getElementById('full-stat-players');
+            const topScoreEl = document.getElementById('stat-top-score');
+
+            const totalCount = sorted.length;
+            const highestScore = totalCount > 0 ? sorted[0].score : 0;
+
+            if (totalPlayersEl) totalPlayersEl.textContent = totalCount;
+            if (fullPlayersEl) fullPlayersEl.textContent = totalCount;
+            if (topScoreEl) topScoreEl.textContent = highestScore;
+
+            // Update Top 5 Mini Preview on Challenge Tab
+            const miniList = document.getElementById('mini-leaderboard-list');
+            if (miniList) {
+                if (sorted.length === 0) {
+                    miniList.innerHTML = `<p class="text-xs text-gray-500 text-center py-6">No scores recorded yet. Be the first on the board!</p>`;
+                } else {
+                    miniList.innerHTML = sorted.slice(0, 5).map((item, idx) => {
+                        const rank = idx + 1;
+                        const badgeClass = rank === 1
+                            ? 'bg-dripYellow text-dripBlack font-bold'
+                            : rank === 2
+                            ? 'bg-gray-300 text-dripBlack font-bold'
+                            : rank === 3
+                            ? 'bg-amber-600 text-white font-bold'
+                            : 'bg-dripDark text-gray-400 border border-dripBorder';
+
+                        return `
+                            <div class="flex items-center justify-between bg-dripDark px-3.5 py-2.5 rounded-xl border border-dripBorder/80">
+                                <div class="flex items-center space-x-3">
+                                    <span class="w-6 h-6 rounded-md text-xs flex items-center justify-center font-mono ${badgeClass}">#${rank}</span>
+                                    <span class="text-sm font-semibold text-white truncate max-w-[150px]">${escapeHtml(item.name)}</span>
+                                </div>
+                                <span class="font-display text-lg font-bold text-dripYellow tracking-wide">${item.score} PTS</span>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            // Update Full Leaderboard Table
+            const tbody = document.getElementById('leaderboard-body');
+            const emptyState = document.getElementById('empty-leaderboard');
+
+            if (tbody && emptyState) {
+                if (sorted.length === 0) {
+                    tbody.innerHTML = '';
+                    emptyState.classList.remove('hidden');
+                } else {
+                    emptyState.classList.add('hidden');
+                    tbody.innerHTML = sorted.map((item, idx) => {
+                        const rank = idx + 1;
+                        let rankBadge = `<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-dripDark border border-dripBorder font-mono font-bold text-gray-300 text-xs">#${rank}</span>`;
+                        let rowHighlight = 'hover:bg-dripDark/50 transition';
+
+                        if (rank === 1) {
+                            rankBadge = `<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-dripYellow text-dripBlack font-mono font-extrabold text-xs shadow">🥇 #1</span>`;
+                            rowHighlight = 'bg-dripYellow/5 hover:bg-dripYellow/10 transition';
+                        } else if (rank === 2) {
+                            rankBadge = `<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-300 text-dripBlack font-mono font-extrabold text-xs">🥈 #2</span>`;
+                        } else if (rank === 3) {
+                            rankBadge = `<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-600 text-white font-mono font-extrabold text-xs">🥉 #3</span>`;
+                        }
+
+                        return `
+                            <tr class="${rowHighlight}">
+                                <td class="py-3.5 px-4 whitespace-nowrap">${rankBadge}</td>
+                                <td class="py-3.5 px-4 font-semibold text-white">${escapeHtml(item.name)}</td>
+                                <td class="py-3.5 px-4 text-center">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-green-500/10 text-green-400 border border-green-500/30">
+                                        ✓ Pledged
+                                    </span>
+                                </td>
+                                <td class="py-3.5 px-4 text-right font-display text-2xl font-bold text-dripYellow tracking-wide">
+                                    ${item.score} <span class="text-xs font-sans text-gray-400 font-normal">PTS</span>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            }
+        }
+
+        // Start app when DOM is ready
+        window.addEventListener('DOMContentLoaded', () => {
+            initApp();
+        });
+    </script>
+</body>
+</html>
